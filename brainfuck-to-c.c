@@ -1,3 +1,10 @@
+/*
+ * Programmer: Kyle Kloberdanz
+ * Description: Takes brainfuck code, and transpiles it to c
+ *              and prints the c code to stdout
+ *              (Use the '>' symbol to direct the output to a file,
+ *               example './brainfuck-to-c program.bf > out.c'     )
+ */
 #include <stdio.h>
 #include <stdlib.h>
 
