@@ -3,11 +3,6 @@
  * Notes       : Must be compiled with c++11 std
  *
  * Description : A brainfuck interpreter in c++
- *      What works -- 
- *          Array that holds stuff that will be looped over
- *
- *      What doesn't work --
- *          The looping sequence segfaults
  */
 
 #include <vector>
