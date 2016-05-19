@@ -2,6 +2,15 @@
  * File        : brainfuck.cpp
  *
  * Description : A brainfuck interpreter in c++
+ *
+ * What works  :
+ *      Most all bf programs run, provided they don't start with comment
+ *      block embedded in brackets (why is this the norm?)
+ *
+ * What doesn't Work:
+ *      See above, comment blocks embedded in loops cause runtime errors,
+ *      will work on this in the future
+ *      
  */
 
 #include <vector>
