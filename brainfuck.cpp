@@ -15,6 +15,7 @@
 
 #include <vector>
 #include <stack>
+#include <iostream>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,6 +42,7 @@ void run_code(char symbol) {
         exit(EXIT_FAILURE);
     } 
 
+    char user_input;
     switch (symbol) { 
 
         // move 1 cell to the right
@@ -70,7 +72,8 @@ void run_code(char symbol) {
 
         // read in char
         case ',':
-            *ptr = getchar();
+            std::cin >> user_input;
+            *ptr = user_input;
             break;
 
         // everything else is ignored (loops are handled elsewhere)
