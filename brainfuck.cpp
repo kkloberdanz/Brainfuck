@@ -7,11 +7,9 @@
 
 #include <vector>
 #include <stack>
-#include <iostream>
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 
 #define TAPE_SIZE 32000 
 
@@ -50,7 +48,6 @@ void print_tape() {
 }
 */
 
-/* put switch in here, call recursively? */
 void run_code(char symbol) { 
 
     // Saftey, end if atempt to write outside of bounds
@@ -129,8 +126,8 @@ int main(int argc, char* argv[]) {
 
     int code_length = code.size();
                               
-    /* Handles looping */
-    do {
+    /* Handles loops */
+    do { 
         if (code[i] == '[') {
             repeat_s.push(i);
         } else if (code[i] == ']') {
