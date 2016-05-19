@@ -1,6 +1,5 @@
 /* Programmer  : Kyle Kloberdanz
  * File        : brainfuck.cpp
- * Notes       : Must be compiled with c++11 std
  *
  * Description : A brainfuck interpreter in c++
  */
@@ -13,39 +12,16 @@
 
 #define TAPE_SIZE 32000 
 
+
 FILE* input_file;
 char  a[TAPE_SIZE] = {0};
 char* ptr = a; 
 
 /*
-// Used for debugging 
+// Used for debugging
 template <typename T>
-void print_vector(std::vector<T> v) {
-    if (!v.empty()) {
-        for (auto element : v) {
-            //std::cout << element << ", ";
-            std::cout << element;
-        }
-        std::cout << std::endl;
-    }
-}
-*/
-
-/*
-// Used for debugging 
-void print_tape() {
-    // An 'x' marks where the head currently is
-    puts("\n*** Start of tape ***");
-    int i;
-    for (i = 0; i < TAPE_SIZE; i++) {
-        if (ptr == a + i) { 
-            printf("%dx, ", a[i]);
-        } else {
-            printf("%d, ", a[i]);
-        }
-    }
-    puts("\n***  End of tape  ***");
-}
+void print_vector(std::vector<T>);
+void print_tape();
 */
 
 void run_code(char symbol) { 
@@ -111,18 +87,38 @@ int main(int argc, char* argv[]) {
 
     /* Pull all of code into memory */
     char symbol = 'a'; 
+    int num_r_brackets = 0;
+    int num_l_brackets = 0;
     while (symbol != EOF) { 
         symbol = fgetc(input_file); 
+        if (symbol == '[') {
+            num_l_brackets++;
+        } else if (symbol == ']') {
+            num_r_brackets++;
+        } 
         code.push_back(symbol); 
+    }
+
+    if (num_r_brackets != num_l_brackets) {
+        puts("brainfuck: Brackets not properly matched!");
+        if (num_l_brackets > num_r_brackets) {
+            puts("brainfuck: more left brackets than right brackets");
+        } else {
+            puts("brainfuck: more right brackets than left brackets");
+        }
+        exit(EXIT_FAILURE);
     }
 
     int i = 0;
 
     // contains indeces of where to loop back to
     std::stack<int> repeat_s;
+    //std::stack<int> end_repeat;
+    //end_repeat.push(-1);
 
     // contains index of where to go after loop
-    int end_repeat;
+    int end_repeat = -1;
+
 
     int code_length = code.size();
                               
@@ -131,13 +127,21 @@ int main(int argc, char* argv[]) {
         if (code[i] == '[') {
             repeat_s.push(i);
         } else if (code[i] == ']') {
+            //end_repeat.push(i);
             end_repeat = i;
             i = repeat_s.top();
         } 
         if (!repeat_s.empty()) { 
             // condition to stop loop 
             if ((i == repeat_s.top()) && (!*ptr)) { 
-                i = end_repeat; 
+                //if (end_repeat.top() < 0) {
+                if (end_repeat < 0) {
+                    puts("brainfuck: runtime error, index of end of loop not found");
+                    exit(EXIT_FAILURE);
+                }
+                //i = end_repeat.top(); 
+                i = end_repeat;
+                //end_repeat.pop();
                 repeat_s.pop();
             }
         }
@@ -150,3 +154,36 @@ int main(int argc, char* argv[]) {
     fclose(input_file);
     return 0;
 }
+
+/* 
+// Used for debugging 
+template <typename T>
+void print_vector(std::vector<T> v) {
+    if (!v.empty()) {
+        for (auto element : v) {
+            //std::cout << element << ", ";
+            std::cout << element;
+        }
+        std::cout << std::endl;
+    }
+}
+*/
+
+/*
+// Used for debugging 
+void print_tape() {
+    // An 'x' marks where the head currently is
+    puts("\n*** Start of tape ***");
+    int i;
+    for (i = 0; i < TAPE_SIZE; i++) {
+        if (ptr == a + i) { 
+            printf("%dx, ", a[i]);
+        } else {
+            printf("%d, ", a[i]);
+        }
+    }
+    puts("\n***  End of tape  ***");
+}
+*/
+
+

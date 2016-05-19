@@ -1,2 +1,5 @@
+CC=g++
+CFLAGS=-O2 -Wall -Wextra -Wpedantic
+
 all:
-	g++ -o brainfuck brainfuck.cpp -std=gnu++11 -O2
+	$(CC) -o brainfuck brainfuck.cpp $(CFLAGS)
