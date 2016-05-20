@@ -35,7 +35,7 @@ void print_tape();
 
 void run_code(char symbol) { 
 
-    // Saftey, end if atempt to write outside of bounds
+    // Saftey, end if attempt to write outside of bounds
     if ((ptr < a) || (ptr >= a + TAPE_SIZE)) {
         puts("brainfuck: quit to avoid overwritting system memory");
         exit(EXIT_FAILURE);
@@ -135,7 +135,6 @@ int main(int argc, char* argv[]) {
         if (code[i] == '[') {
             repeat_s.push(i);
         } else if (code[i] == ']') {
-            //end_repeat.push(i);
             end_repeat = i;
             i = repeat_s.top();
         } 
