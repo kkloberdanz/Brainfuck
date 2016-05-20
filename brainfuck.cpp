@@ -4,12 +4,11 @@
  * Description : A brainfuck interpreter in c++
  *
  * What works  :
- *      Most all bf programs run, provided they don't start with comment
- *      block embedded in brackets (why is this the norm?)
+ *      Most all bf programs run
  *
- * What doesn't Work:
- *      See above, comment blocks embedded in loops cause runtime errors,
- *      will work on this in the future
+ * What to do next?
+ *      Maybe implement comments, so that .><,[] would
+ *      not be interpreted as control characters?
  *      
  */
 
@@ -125,12 +124,9 @@ int main(int argc, char* argv[]) {
 
     // contains indeces of where to loop back to
     std::stack<int> repeat_s;
-    //std::stack<int> end_repeat;
-    //end_repeat.push(-1);
 
     // contains index of where to go after loop
-    int end_repeat = -1;
-
+    int end_repeat = -1; 
 
     int code_length = code.size();
                               
@@ -145,15 +141,8 @@ int main(int argc, char* argv[]) {
         } 
         if (!repeat_s.empty()) { 
             // condition to stop loop 
-            if ((i == repeat_s.top()) && (!*ptr)) { 
-                //if (end_repeat.top() < 0) {
-                if (end_repeat < 0) {
-                    puts("brainfuck: runtime error, index of end of loop not found");
-                    exit(EXIT_FAILURE);
-                }
-                //i = end_repeat.top(); 
+            if ((i == repeat_s.top()) && (!*ptr) && (end_repeat > 0)) { 
                 i = end_repeat;
-                //end_repeat.pop();
                 repeat_s.pop();
             }
         }
