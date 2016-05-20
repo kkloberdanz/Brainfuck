@@ -4,11 +4,21 @@
  * Description : A brainfuck interpreter in c++
  *
  * What works  :
- *      Most all bf programs run
+ *      Most bf programs run, although mandelbrot.b and primes.bf
+ *      are not working. My transpiler runs primes.bf correctly,
+ *      but not mandelbrot.b. mandelbrot.b runs correcltly on an 
+ *      interpreter that I found online, so I believe there is a bug
+ *      in both my interpreter and transpiler.
  *
- * What to do next?
- *      Maybe implement comments, so that .><,[] would
- *      not be interpreted as control characters?
+ * Notes       :
+ *      Comments can be written as a block within square brackets at the
+ *      begining of the program, e.g.,
+ *      [
+ *          This is a comment.
+ *      ]
+ *
+ *      or surrounded by quotes, e.g.,
+ *      "This is also a comment."
  *      
  */
 
@@ -19,25 +29,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define TAPE_SIZE 64000 
+#define TAPE_SIZE 1000 
 
 
 FILE* input_file;
 char  a[TAPE_SIZE] = {0};
-char* ptr = a; 
+char* ptr = a + (TAPE_SIZE / 2); 
 
-/*
 // Used for debugging
 template <typename T>
 void print_vector(std::vector<T>);
 void print_tape();
-*/
 
 void run_code(char symbol) { 
 
     // Saftey, end if attempt to write outside of bounds
     if ((ptr < a) || (ptr >= a + TAPE_SIZE)) {
-        puts("brainfuck: quit to avoid overwritting system memory");
+        puts("\nbrainfuck: quit to avoid overwritting system memory");
+        printf("           Location of ptr     : %d\n", ptr);
+        printf("           Max address of tape : %d\n", a + TAPE_SIZE);
+        printf("           Min address of tape : %d\n", a);
+                    
         exit(EXIT_FAILURE);
     } 
 
@@ -127,20 +139,23 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
 
+    //print_tape();
+
     int i = 0;
 
     // contains indeces of where to loop back to
     std::stack<int> repeat_s;
 
     // contains index of where to go after loop
-    int end_repeat = -1; 
+    int end_repeat = -1;
 
     int code_length = code.size();
 
     int num_parens_to_skip;
-                              
+
     /* Handles loops */
     do { 
+        /* if at loop begining, and *ptr is zero, skip it */
         if ((code[i] == '[') && (*ptr == 0)) { 
             num_parens_to_skip = 0;
             do {
@@ -173,10 +188,10 @@ int main(int argc, char* argv[]) {
     } while (i < code_length);
 
     fclose(input_file);
+    //print_tape();
     return 0;
 }
 
-/* 
 // Used for debugging 
 template <typename T>
 void print_vector(std::vector<T> v) {
@@ -188,9 +203,7 @@ void print_vector(std::vector<T> v) {
         std::cout << std::endl;
     }
 }
-*/
 
-/*
 // Used for debugging 
 void print_tape() {
     // An 'x' marks where the head currently is
@@ -198,13 +211,11 @@ void print_tape() {
     int i;
     for (i = 0; i < TAPE_SIZE; i++) {
         if (ptr == a + i) { 
-            printf("%dx, ", a[i]);
+            printf("%3dx, ", a[i]);
         } else {
-            printf("%d, ", a[i]);
+            printf("%4d, ", a[i]);
         }
     }
     puts("\n***  End of tape  ***");
 }
-*/
-
 
