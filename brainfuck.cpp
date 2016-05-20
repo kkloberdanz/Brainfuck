@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define TAPE_SIZE 32000 
+#define TAPE_SIZE 64000 
 
 
 FILE* input_file;
@@ -41,6 +41,7 @@ void run_code(char symbol) {
         exit(EXIT_FAILURE);
     } 
 
+    //printf("\nRunning: %c\n", symbol);
     char user_input;
     switch (symbol) { 
 
@@ -100,14 +101,20 @@ int main(int argc, char* argv[]) {
     char symbol = 'a'; 
     int num_r_brackets = 0;
     int num_l_brackets = 0;
+    bool in_comment = false;
     while (symbol != EOF) { 
         symbol = fgetc(input_file); 
+        if (symbol == '\"') {
+            in_comment = !in_comment;
+        }
         if (symbol == '[') {
             num_l_brackets++;
         } else if (symbol == ']') {
             num_r_brackets++;
         } 
-        code.push_back(symbol); 
+        if (!in_comment) {
+            code.push_back(symbol); 
+        }
     }
 
     if (num_r_brackets != num_l_brackets) {
@@ -129,20 +136,34 @@ int main(int argc, char* argv[]) {
     int end_repeat = -1; 
 
     int code_length = code.size();
+
+    int num_parens_to_skip;
                               
     /* Handles loops */
     do { 
-        if (code[i] == '[') {
-            repeat_s.push(i);
-        } else if (code[i] == ']') {
-            end_repeat = i;
-            i = repeat_s.top();
-        } 
-        if (!repeat_s.empty()) { 
-            // condition to stop loop 
-            if ((i == repeat_s.top()) && (!*ptr) && (end_repeat > 0)) { 
-                i = end_repeat;
-                repeat_s.pop();
+        if ((code[i] == '[') && (*ptr == 0)) { 
+            num_parens_to_skip = 0;
+            do {
+                if (code[i] == '[') {
+                    num_parens_to_skip++;
+                } else if (code[i] == ']') {
+                    num_parens_to_skip--;
+                }
+                i++;
+            } while (num_parens_to_skip != 0);
+        } else {
+            if (code[i] == '[') {
+                repeat_s.push(i);
+            } else if (code[i] == ']') {
+                end_repeat = i;
+                i = repeat_s.top();
+            } 
+            if (!repeat_s.empty()) { 
+                // condition to stop loop 
+                if ((i == repeat_s.top()) && (!*ptr) && (end_repeat > 0)) { 
+                    i = end_repeat;
+                    repeat_s.pop();
+                }
             }
         }
         if ((code[i] != '[') && (code[i] != ']')) {
