@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
 
     /* Handles loops */
     do { 
-        /* if at loop begining, and *ptr is zero, skip it */
+        /* if at loop beginning, and *ptr is zero, skip it */
         if ((code[i] == '[') && (*ptr == 0)) { 
             num_parens_to_skip = 0;
             do {
@@ -188,7 +188,6 @@ int main(int argc, char* argv[]) {
     } while (i < code_length);
 
     fclose(input_file);
-    //print_tape();
     return 0;
 }
 
